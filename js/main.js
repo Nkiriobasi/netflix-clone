@@ -2,6 +2,13 @@ const tabItems = document.querySelectorAll(".tab__item");
 const tabContentItems = document.querySelectorAll(".tab__content__item");
 
 
+
+// Listen for tab click
+tabItems.forEach(item => item.addEventListener('click', selectItem));
+
+
+
+
 // Select tab content item
 function selectItem(e){
 	// remove border from the previous tab
@@ -21,17 +28,16 @@ function selectItem(e){
 }
 
 
+
+
 // Remove border function
 const removeBorder = () =>{
 	tabItems.forEach(item => item.classList.remove('tab__border'));
 }
 
+
+
 // Remove show class function
 const removeShow = () =>{
 	tabContentItems.forEach(item => item.classList.remove('show'));
 }
-
-
-
-// Listen for tab click
-tabItems.forEach(item => item.addEventListener('click', selectItem));
