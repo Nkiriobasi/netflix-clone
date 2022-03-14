@@ -20,7 +20,7 @@ function selectItem(e){
 	// Add border to current tab
 	this.classList.add('tab__border');
 
-	// Grab content item from the DOM
+	// Get content item from the DOM
 	const tabContentItem = document.querySelector(`#${this.id}__content`);
 
 	// Add show class
