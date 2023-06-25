@@ -1,10 +1,24 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import Movie from './Movie';
+import Movie from '../Movie/Movie';
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
 
-const Row = ({ title, fetchURL, rowID }) => {
-  const [movies, setMovies] = useState([]);
+
+interface IMovieType {
+  id: any
+  title: string
+  backdrop_path: string
+}
+
+interface IRowProps {
+  title: string
+  fetchURL: string
+  rowID: string
+}
+
+
+const Row: React.FC<IRowProps> = ({ title, fetchURL, rowID }) => {
+  const [movies, setMovies] = useState<IMovieType[] | undefined>(undefined);
 
   useEffect(() => {
     axios.get(fetchURL).then((response) => {
@@ -14,11 +28,17 @@ const Row = ({ title, fetchURL, rowID }) => {
 
   const slideLeft = () => {
     var slider = document.getElementById('slider' + rowID);
-    slider.scrollLeft = slider.scrollLeft - 500;
+
+    if(slider !== null){
+      slider.scrollLeft = slider.scrollLeft - 500;
+    }
   };
   const slideRight = () => {
     var slider = document.getElementById('slider' + rowID);
-    slider.scrollLeft = slider.scrollLeft + 500;
+
+    if(slider !== null){
+      slider.scrollLeft = slider.scrollLeft + 500;
+    }
   };
 
   return (
@@ -34,8 +54,13 @@ const Row = ({ title, fetchURL, rowID }) => {
           id={'slider' + rowID}
           className='w-full h-full overflow-x-scroll whitespace-nowrap scroll-smooth scrollbar-hide relative'
         >
-          {movies.map((item, id) => (
-            <Movie key={id} item={item} />
+          {movies && movies.map((item, id) => (
+            <Movie 
+              key={id} 
+              id={item.id} 
+              backdrop_path={item.backdrop_path} 
+              title={item.title} 
+            />
           ))}
         </div>
         <MdChevronRight

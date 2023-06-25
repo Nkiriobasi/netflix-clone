@@ -1,26 +1,37 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import React, { ReactNode, createContext, useContext, useEffect, useState } from 'react';
 import { auth, db } from '../firebase';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  UserCredential,
+  User,
 } from 'firebase/auth';
-import {setDoc,doc} from 'firebase/firestore'
+import {setDoc,doc} from 'firebase/firestore';
 
-const AuthContext = createContext();
 
-export function AuthContextProvider({ children }) {
-  const [user, setUser] = useState({});
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+interface IContext {
+  signUp: (email: string, password: string) => void
+  logIn: (email: string, password: string) => Promise<UserCredential>
+  logOut: () => Promise<void>
+  user: User | null
+}
 
-  function signUp(email, password) {
+const AuthContext = createContext<any | undefined>(undefined);
+
+export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [user, setUser] = useState<User | null>(null);
+
+  function signUp(email: string, password: string) {
     createUserWithEmailAndPassword(auth, email, password);
     setDoc(doc(db, 'users', email), {
-      savedShows: []
+      savedShows : []
     })
   }
 
-  function logIn(email, password) {
+  function logIn(email: string, password: string) {
     return signInWithEmailAndPassword(auth, email, password);
   }
 

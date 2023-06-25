@@ -1,13 +1,21 @@
-/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from 'react';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
-import { UserAuth } from '../context/AuthContext';
-import { db } from '../firebase';
+import { UserAuth } from '../../context/AuthContext';
+import { db } from '../../firebase';
 import { arrayUnion, doc, updateDoc } from 'firebase/firestore';
 
-const Movie = ({ item }) => {
-  const [like, setLike] = useState(false);
-  const [saved, setSaved] = useState(false);
+
+interface IMovieType {
+  id: any
+  title: string
+  backdrop_path: string
+}
+
+
+const Movie: React.FC<IMovieType> = ({ id, title, backdrop_path}) => {
+  const [like, setLike] = useState<boolean>(false);
+  const [saved, setSaved] = useState<boolean>(false);
   const { user } = UserAuth();
 
   const movieID = doc(db, 'users', `${user?.email}`);
@@ -18,9 +26,9 @@ const Movie = ({ item }) => {
       setSaved(true);
       await updateDoc(movieID, {
         savedShows: arrayUnion({
-          id: item.id,
-          title: item.title,
-          img: item.backdrop_path,
+          id,
+          title,
+          img: backdrop_path,
         }),
       });
     } else {
@@ -32,12 +40,12 @@ const Movie = ({ item }) => {
     <div className='w-[160px] sm:w-[200px] md:w-[240px] lg:w-[280px] inline-block cursor-pointer relative p-2'>
       <img
         className='w-full h-auto block'
-        src={`https://image.tmdb.org/t/p/w500/${item?.backdrop_path}`}
-        alt={item?.title}
+        src={`https://image.tmdb.org/t/p/w500/${backdrop_path}`}
+        alt={title}
       />
       <div className='absolute top-0 left-0 w-full h-full hover:bg-black/80 opacity-0 hover:opacity-100 text-white'>
         <p className='white-space-normal text-xs md:text-sm font-bold flex justify-center items-center h-full text-center'>
-          {item?.title}
+          {title}
         </p>
         <p onClick={saveShow}>
           {like ? (

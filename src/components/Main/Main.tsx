@@ -1,11 +1,20 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import requests from '../Requests';
+import requests from '../../Requests';
+
+
+interface IMovieType {
+  backdrop_path: string
+  title: string
+  release_date: string
+  overview: string
+}
+
 
 const Main = () => {
-  const [movies, setMovies] = useState([]);
+  const [movies, setMovies] = useState<IMovieType[] | undefined>(undefined);
 
-  const movie = movies[Math.floor(Math.random() * movies.length)];
+  const movie = movies && movies[Math.floor(Math.random() * movies.length)];
 
   useEffect(() => {
     axios.get(requests.requestPopular).then((response) => {
@@ -14,7 +23,7 @@ const Main = () => {
   }, []);
 
 
-  const truncateString = (str, num) => {
+  const truncateString = (str: string, num: number) => {
     if (str?.length > num) {
       return str.slice(0, num) + '...';
     } else {
@@ -45,7 +54,7 @@ const Main = () => {
             Released: {movie?.release_date}
           </p>
           <p className='w-full md:max-w-[70%] lg:max-w-[50%] xl:max-w-[35%] text-gray-200'>
-            {truncateString(movie?.overview, 150)}
+            {movie && truncateString(movie?.overview, 150)}
           </p>
         </div>
       </div>

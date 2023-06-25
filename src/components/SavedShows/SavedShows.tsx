@@ -1,21 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
-import { UserAuth } from '../context/AuthContext';
-import { db } from '../firebase';
+import { UserAuth } from '../../context/AuthContext';
+import { db } from '../../firebase';
 import { updateDoc, doc, onSnapshot } from 'firebase/firestore';
 import { AiOutlineClose } from 'react-icons/ai';
 
+type MovieType = {
+  id: React.Key
+  img: string
+  title: string
+}
+
 const SavedShows = () => {
-  const [movies, setMovies] = useState([]);
+  const [movies, setMovies] = useState<MovieType[]>([]);
   const { user } = UserAuth();
 
   const slideLeft = () => {
-    var slider = document.getElementById('slider');
-    slider.scrollLeft = slider.scrollLeft - 500;
+    let slider = document.getElementById('slider');
+
+    if(slider !== null){
+      slider.scrollLeft = slider.scrollLeft - 500;
+    }
   };
   const slideRight = () => {
-    var slider = document.getElementById('slider');
-    slider.scrollLeft = slider.scrollLeft + 500;
+    let slider = document.getElementById('slider');
+
+    if(slider !== null){
+      slider.scrollLeft = slider.scrollLeft + 500;
+    }
   };
 
   useEffect(() => {
@@ -25,15 +37,15 @@ const SavedShows = () => {
   }, [user?.email]);
 
   const movieRef = doc(db, 'users', `${user?.email}`)
-  const deleteShow = async (passedID) => {
-      try {
-        const result = movies.filter((item) => item.id !== passedID)
-        await updateDoc(movieRef, {
-            savedShows: result
-        })
-      } catch (error) {
-          console.log(error)
-      }
+  const deleteShow = async (passedID: React.Key) => {
+    try {
+      const result = movies.filter((item) => item.id !== passedID)
+      await updateDoc(movieRef, {
+        savedShows: result
+      })
+    } catch (error: any) {
+      console.log(error.message)
+    }
   }
 
   return (
